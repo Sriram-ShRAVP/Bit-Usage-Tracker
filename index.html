@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bit Usage Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 2xl;
+      padding: 2rem;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      border-radius: 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .dropdown {
+      margin: 1rem 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    select {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      background-color: #fff;
+      color: #000;
+    }
+
+    .data-stats {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Bit/Data Usage Monitor</h1>
+    <div class="dropdown">
+      <select id="timeframe" onchange="updateDisplay()">
+        <option value="second">Per Second</option>
+        <option value="minute">Per Minute</option>
+        <option value="hour">Per Hour</option>
+        <option value="day">Per Day</option>
+        <option value="month">Per Month</option>
+      </select>
+    </div>
+    <div class="data-stats">
+      <div class="stat">
+        <span>Estimated Data:</span>
+        <span id="bitCount">0 Bits</span>
+      </div>
+      <div class="stat">
+        <span>Equivalent:</span>
+        <span id="byteCount">0 Bytes</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const bitDisplay = document.getElementById("bitCount");
+    const byteDisplay = document.getElementById("byteCount");
+
+    const averagePerSecondBits = 150000; // Example bits/sec (approx, adjustable)
+
+    function calculateBits(timeframe) {
+      switch(timeframe) {
+        case 'second': return averagePerSecondBits;
+        case 'minute': return averagePerSecondBits * 60;
+        case 'hour': return averagePerSecondBits * 60 * 60;
+        case 'day': return averagePerSecondBits * 60 * 60 * 24;
+        case 'month': return averagePerSecondBits * 60 * 60 * 24 * 30;
+        default: return averagePerSecondBits;
+      }
+    }
+
+    function updateDisplay() {
+      const timeframe = document.getElementById("timeframe").value;
+      const bits = calculateBits(timeframe);
+      const bytes = (bits / 8).toFixed(2);
+      bitDisplay.textContent = `${bits.toLocaleString()} Bits`;
+      byteDisplay.textContent = `${bytes.toLocaleString()} Bytes`;
+    }
+
+    // Initial load
+    updateDisplay();
+  </script>
+</body>
+</html>
